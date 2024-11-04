@@ -178,11 +178,18 @@ int main(int argc, char* argv[])
         else if (fscanf(file, "%c\n", &label_VH) == 1) {
             new_VH(label_VH, iteration);
 
-            for (int j = 0; j < arr_index2 ; j++) {
+            //find the most recently processed VH node with this label
+            Point* latest_vh = NULL;
+            for (int j = arr_index2 - 1; j >= 0; j--) {  //search backwards
                 if (arr[j]->label == label_VH) {
-                    dim_list(arr[j]->label, arr[j]->x, arr[j]->y);
-                    arr[j]->label = 0;
+                    latest_vh = arr[j];
+                    break;  //take only the most recent one
                 }
+            }
+            
+            if (latest_vh != NULL) {
+                dim_list(latest_vh->label, latest_vh->x, latest_vh->y);
+                latest_vh->label = 0;  //clearing it so it skips this one next time
             }
         } 
         else 
@@ -191,7 +198,7 @@ int main(int argc, char* argv[])
             break;
         }
     }
-
+    
     fclose(file);
 
     return 0;
