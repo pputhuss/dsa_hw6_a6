@@ -17,6 +17,7 @@ typedef struct Point {
 //global variables
 int arr_index = 0; //used for part 1
 int arr_index2 = 0; //used for part 2
+int arr_index3 = 0; //used for part 3
 
 Point* arr[SIZE];
 
@@ -43,6 +44,30 @@ void add_To_Tree(Point* newPoint) {
     }
 }
 
+void add_To_Tree_P3(Point* newPoint) {
+    if (arr_index3 < SIZE) 
+    {
+        //arr defined in global var section
+        arr[arr_index3] = newPoint; 
+
+        if ((newPoint->label == 'V' || newPoint->label == 'H') && (arr_index3 >= 2)) {
+            newPoint->right = arr[arr_index3 - 1]; 
+            newPoint->left = arr[arr_index3 - 2];
+
+            arr[arr_index3 - 2] = newPoint;
+            arr_index3 = arr_index3 - 1;
+        }
+        else {
+            arr_index3++;
+        }
+    }
+    else 
+    {
+        printf("arr is full");
+    }
+}
+
+
 void find_VHdim(Point* newPoint) {
     if (arr_index2 < SIZE) 
     {
@@ -54,9 +79,25 @@ void find_VHdim(Point* newPoint) {
             newPoint->left = arr[arr_index2 - 2];
 
             //new part
-            newPoint->x = (newPoint->right)->x + (newPoint->left)->x; 
-            newPoint->y = (newPoint->right)->y + (newPoint->left)->y; 
+            if (newPoint->label == 'V') {
+                newPoint->x = (newPoint->right)->x + (newPoint->left)->x;
+                if  ((newPoint->right)->y >= ((newPoint->left)->y)) {
+                    newPoint->y = (newPoint->right)->y;
+                }
+                else {
+                    newPoint->y = (newPoint->left)->y; 
+                } 
+            }
+            else if (newPoint->label == 'H') {
+                newPoint->y = (newPoint->right)->y + (newPoint->left)->y;
 
+                if  ((newPoint->right)->x >= ((newPoint->left)->x)) {
+                    newPoint->x = (newPoint->right)->x;
+                }
+                else {
+                    newPoint->x = (newPoint->left)->x; 
+                } 
+            }
 
             arr[arr_index2 - 2] = newPoint;
             arr_index2 = arr_index2 - 1;   
@@ -81,11 +122,14 @@ void new_Block(int label, int x_val, int y_val, int iteration) {
     newPoint->y_point = -1;    
     newPoint->left = NULL;
     newPoint->right = NULL;
-    if (iteration == 1 || iteration == 3) {
+    if (iteration == 1) {
         add_To_Tree(newPoint);
     }
     if (iteration == 2) {    
         find_VHdim(newPoint);
+    }
+    if (iteration == 3) {
+        add_To_Tree_P3(newPoint);
     }
 }
 
@@ -102,9 +146,11 @@ void new_VH(char label, int iteration) {
     if (iteration == 1) {
         add_To_Tree(newPoint);
     }
-
     if (iteration == 2) {    
         find_VHdim(newPoint);
+    }
+    if (iteration == 3) {
+        add_To_Tree_P3(newPoint);
     }
 }
 
@@ -133,9 +179,53 @@ void dim_list(int label, int x_val, int y_val) {
     }
 }
 
-void get_coords(Point* root, int x_curr, int y_curr) //starts at 0,0 for root btw
-{
+//global var just for this function
+int right_sub_iteration = 0;
 
+int packaging_right_side(Point* root, int x_curr, int y_curr) //starts at 0,0 and root btw
+{
+    //first need to get to bottommost V/H node on right subtree
+    //this if is used to make it go right first from node
+    if (right_sub_iteration == 0)
+    {
+        packaging_right_side(root->right, 0, 0);
+        right_sub_iteration = 1;
+    }
+    else
+    {
+        if ((root->right)->label == 'V' || (root->right)->label == 'H') 
+        {
+            packaging_right_side(root->right, 0, 0);
+        }
+        else if ((root->left)->label == 'V' || (root->left->label) == 'H')
+        {
+            packaging_right_side(root->left, 0, 0);
+        }
+
+        else //if it reaches here the first iteration will be bottommost V/H
+        {
+            //setting bottomost V/H's left node to (0,0)
+            (root->left)->x_point = x_curr; 
+            (root->left)->y_point = y_curr;
+
+            if(root->label == 'V') 
+            {
+                (root->right)->x_point = (root->left)->x + (root->left)->x_point;
+                
+                //i think the right node will always have the same y for a V cut as left node
+                (root->right)->y_point = (root->left)->y;
+                // if ((root->right)->y > (root->left)->y) {
+                //     (root->right)->y_point = (root->right)->y;
+                // }
+                // else 
+                // {
+                //     (root->right)->y_point = (root->left)->y;
+
+                // }
+            }
+
+        }
+    }
 }
 
 int main(int argc, char* argv[])
@@ -156,7 +246,7 @@ int main(int argc, char* argv[])
 
     //PART 1
     if (iteration == 1) {
-        while (!feof(file)) {
+        while (1) {
             if (fscanf(file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
                 new_Block(label, x_val, y_val, iteration);
             } 
@@ -183,8 +273,8 @@ int main(int argc, char* argv[])
 
     //using this while/file open to find dimensions of V/H nodes
     else if (iteration == 2) {
-        rewind(file);
-        while (!feof(file)) {
+        // rewind(file);
+        while (1) {
             if (fscanf(file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
                 new_Block(label, x_val, y_val, iteration);
                 dim_list(label, x_val, y_val);
@@ -211,17 +301,12 @@ int main(int argc, char* argv[])
                 break;
             }
         }
-        if ((arr_index > 0) && (iteration == 1)) {
-            //start printing from the last added element (root of the tree)
-            //doing -1 cuz i did i++ at end of each iteration in add_to_tree
-            print_Tree((Point*)arr[arr_index - 1]);  // Start printing from the last added element (root of the tree)
-        }
     }
     
     //PART 3
     else if (iteration == 3) {
-        rewind(file);
-        while (!feof(file)) {
+        // rewind(file);
+        while (1) {
             if (fscanf(file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
                 new_Block(label, x_val, y_val, iteration);
             } 
@@ -235,11 +320,31 @@ int main(int argc, char* argv[])
                 break;
             }
         }
-    }
+        //copt of arr_index3 before using if needed, make sure to -1 if u wanna use
+        int arr_index3_copy = arr_index3;
+
+        //at this point tree is created
+        if ((arr_index3 > 0) && (iteration == 3)) {
+            //start printing from the last added element (root of the tree)
+            //doing -1 cuz i did i++ at end of each iteration in add_to_tree
+            //print_Tree((Point*)arr[arr_index3 - 1]);  // Start printing from the last added element (root of the tree)
+        }    
+        int coords = 0;
+        coords = packaging_right_side((Point*)arr[arr_index3 - 1], 0, 0); //start working from the last added element (root of the tree)
+
+
+
+
+
+
+        }
 
     else 
     {
         fclose(file);
     }
+    
+    fclose(file);
+
     return 0;
 }
