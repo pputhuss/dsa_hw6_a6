@@ -298,7 +298,7 @@ int main(int argc, char* argv[])
     if (arr_index > 0) {
         free_tree(arr[arr_index - 1]);
     }
-    free_remaining_points(arr_index);
+    // free_remaining_points(arr_index);
 
     //PART 2
     rewind(in_file); //geeks for geeks, lets me reread from beginning
@@ -332,7 +332,7 @@ int main(int argc, char* argv[])
     if (arr_index2 > 0) {
     free_tree(arr[arr_index2 - 1]);
     }
-    free_remaining_points(arr_index2);
+    // free_remaining_points(arr_index2);
 
     //PART 3-----------------> unfinished
     //rewind(in_file);
