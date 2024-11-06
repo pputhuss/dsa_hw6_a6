@@ -21,6 +21,24 @@ int arr_index3 = 0; //used for part 3
 
 Point* arr[SIZE];
 
+void free_tree(Point* root) {
+    if (root == NULL) {
+        return;
+    }
+    free_tree(root->left);
+    free_tree(root->right);
+    free(root);
+}
+
+void free_remaining_points(int start_index) {
+    for (int i = start_index; i < SIZE; i++) {
+        if (arr[i] != NULL) {
+            free(arr[i]);
+            arr[i] = NULL;
+        }
+    }
+}
+
 void add_To_Tree(Point* newPoint) {
     if (arr_index < SIZE) 
     {
@@ -41,6 +59,7 @@ void add_To_Tree(Point* newPoint) {
     else 
     {
         printf("arr is full");
+        free(newPoint);
     }
 }
 
@@ -64,6 +83,7 @@ void add_To_Tree_P3(Point* newPoint) {
     else 
     {
         printf("arr is full");
+        free(newPoint);
     }
 }
 
@@ -107,6 +127,7 @@ void find_VHdim(Point* newPoint) {
     else 
     {
         printf("arr is full");
+        free(newPoint);
     }
     //at this point tree is fully populated, with VH nodes having dimensions
 }
@@ -274,6 +295,11 @@ int main(int argc, char* argv[])
     //pre-order traversal to out_file1
     print_Tree_To_File(arr[arr_index - 1], out_file1);
 
+    if (arr_index > 0) {
+        free_tree(arr[arr_index - 1]);
+    }
+    free_remaining_points(arr_index);
+
     //PART 2
     rewind(in_file); //geeks for geeks, lets me reread from beginning
     iteration = 2;
@@ -302,6 +328,11 @@ int main(int argc, char* argv[])
             break;
         }
     }
+
+    if (arr_index2 > 0) {
+    free_tree(arr[arr_index2 - 1]);
+    }
+    free_remaining_points(arr_index2);
 
     //PART 3-----------------> unfinished
     //rewind(in_file);
