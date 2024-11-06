@@ -5,4 +5,4 @@ a6: main.c
 	$(CC) $(CFLAGS) main.c -o a6
 
 clean:
-	rm -f a6
+	rm -f a6 out_file1 out_file2 out_file3

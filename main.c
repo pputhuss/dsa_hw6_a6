@@ -180,18 +180,18 @@ int main(int argc, char* argv[])
 {    
     //check command line arguments
     if (argc != 5) {
-        fprintf(stderr, "Usage: %s in_file out_file1 out_file2 out_file3\n", argv[0]);
+        printf("nah");
         return EXIT_FAILURE;
     }
 
     //open input and output files
-    FILE* file = fopen(argv[1], "r");
-    FILE* output1 = fopen(argv[2], "w");
-    FILE* output2 = fopen(argv[3], "w");
-    FILE* output3 = fopen(argv[4], "w");
+    FILE* in_file = fopen(argv[1], "r");
+    FILE* out_file1 = fopen(argv[2], "w");
+    FILE* out_file2 = fopen(argv[3], "w");
+    FILE* out_file3 = fopen(argv[4], "w");
 
-    if (file == NULL || output1 == NULL || output2 == NULL || output3 == NULL) {
-        fprintf(stderr, "Error opening files\n");
+    if (in_file == NULL || out_file1 == NULL || out_file2 == NULL || out_file3 == NULL) {
+        fprintf(stderr, "error opening files\n");
         return EXIT_FAILURE;
     }
 
@@ -203,10 +203,10 @@ int main(int argc, char* argv[])
 
     //PART 1
     while (1) {
-        if (fscanf(file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
+        if (fscanf(in_file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
             new_Block(label, x_val, y_val, iteration);
         } 
-        else if (fscanf(file, "%c\n", &label_VH) == 1) {
+        else if (fscanf(in_file, "%c\n", &label_VH) == 1) {
             new_VH(label_VH, iteration);
         } 
         else {
@@ -215,18 +215,18 @@ int main(int argc, char* argv[])
     }
 
     //pre-order traversal to out_file1
-    print_Tree_To_File(arr[arr_index - 1], output1);
+    print_Tree_To_File(arr[arr_index - 1], out_file1);
 
     //PART 2
-    rewind(file); //geeks for geeks, lets me reread from beginning
+    rewind(in_file); //geeks for geeks, lets me reread from beginning
     iteration = 2;
 
     while (1) {
-        if (fscanf(file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
+        if (fscanf(in_file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
             new_Block(label, x_val, y_val, iteration);
-            dim_list_To_File(label, x_val, y_val, output2);
+            dim_list_To_File(label, x_val, y_val, out_file2);
         } 
-        else if (fscanf(file, "%c\n", &label_VH) == 1) {
+        else if (fscanf(in_file, "%c\n", &label_VH) == 1) {
             new_VH(label_VH, iteration);
             Point* latest_vh = NULL;
             for (int j = arr_index2 - 1; j >= 0; j--) {
@@ -237,7 +237,7 @@ int main(int argc, char* argv[])
             }
             
             if (latest_vh != NULL) {
-                dim_list_To_File(latest_vh->label, latest_vh->x, latest_vh->y, output2);
+                dim_list_To_File(latest_vh->label, latest_vh->x, latest_vh->y, out_file2);
                 latest_vh->label = 0;
             }
         } 
@@ -246,11 +246,11 @@ int main(int argc, char* argv[])
         }
     }
 
-    //close all files
-    fclose(file);
-    fclose(output1);
-    fclose(output2);
-    fclose(output3);
+    //close files
+    fclose(in_file);
+    fclose(out_file1);
+    fclose(out_file2);
+    fclose(out_file3);
 
     return EXIT_SUCCESS;
 }
