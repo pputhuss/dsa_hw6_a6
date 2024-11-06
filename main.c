@@ -176,6 +176,63 @@ void dim_list_To_File(int label, int x_val, int y_val, FILE* outfile) {
     }
 }
 
+//global var just for this function
+// int right_sub_iteration = 0;
+// int packaging_right_side(Point* root, int x_curr, int y_curr) //starts at 0,0 and root btw
+// {
+//     //first need to get to bottommost V/H node on right subtree
+//     //this if is used to make it go right first from node
+//     if (right_sub_iteration == 0)
+//     {
+//         right_sub_iteration = 1;
+//         packaging_right_side(root->right, x_curr, y_curr);
+//     }
+//     else
+//     {
+//         if ((root->right)->label == 'V' || (root->right)->label == 'H') 
+//         {
+//             packaging_right_side(root->right, x_curr, y_curr);
+//         }
+//         else if ((root->left)->label == 'V' || (root->left->label) == 'H')
+//         {
+//             packaging_right_side(root->left, x_curr, y_curr);
+//         }
+
+//         else //if it reaches here the first iteration will be bottommost V/H
+//         {
+//             //setting bottomost V/H's left node to (0,0)
+//             (root->left)->x_point = x_curr; 
+//             (root->left)->y_point = y_curr;
+
+//             if(root->label == 'V') 
+//             {
+//                 root->x_point = (root->left)->x_point;
+//                 root->y_point = (root->left)->y_point;
+
+//                 //root->right and root x val updates
+//                 (root->right)->x_point = (root->left)->x; //+ (root->left)->x_point;
+//                 root->x = (root->left)->x + (root->right)->x; //V's x dim would be leftx + rightx
+                
+//                 //root->right and root y val updates
+//                 //i think the right node will always have the same y for a V cut as left node
+//                 (root->right)->y_point = (root->left)->y_point;
+
+//                 //V's y dim would be the highest of the left and right node 
+//                 if ((root->right)->y > (root->left)->y) {
+//                     root->y = (root->right)->y;
+//                 }
+//                 else 
+//                 {
+//                     (root)->y = (root->left)->y;
+//                 } //at this point i have gotten the dimensions of V node and set both child nodes
+//                 return;
+
+//             }
+
+//         }
+//     }
+// }
+
 int main(int argc, char* argv[])
 {    
     //check command line arguments
@@ -245,6 +302,34 @@ int main(int argc, char* argv[])
             break;
         }
     }
+
+    //PART 3-----------------> unfinished
+    //rewind(in_file);
+    //iteration = 3;
+    // while (1) {
+    //         if (fscanf(in_file, "%d(%d,%d)\n", &label, &x_val, &y_val) == 3) {
+    //             new_Block(label, x_val, y_val, iteration);
+    //         } 
+    //         else if (fscanf(in_file, "%c\n", &label_VH) == 1) {
+    //             new_VH(label_VH, iteration);
+    //         }     
+    //         else 
+    //         {
+    //             //if neither format matched
+    //             break;
+    //         }
+    //     }
+    //     //copt of arr_index3 before using if needed, make sure to -1 if u wanna use
+    //     int arr_index3_copy = arr_index3;
+    //     //at this point tree is created
+    //     if ((arr_index3 > 0) && (iteration == 3)) {
+    //         //start printing from the last added element (root of the tree)
+    //         //doing -1 cuz i did i++ at end of each iteration in add_to_tree
+    //         //print_Tree((Point*)arr[arr_index3 - 1]);  // Start printing from the last added element (root of the tree)
+    //     }    
+    //     int coords = 0;
+    //     packaging_right_side((Point*)arr[arr_index3 - 1], 0, 0); //start working from the last added element (root of the tree)
+    //     }
 
     //close files
     fclose(in_file);
