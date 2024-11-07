@@ -365,9 +365,34 @@ int main(int argc, char* argv[])
 
     //open input and output files
     FILE* in_file = fopen(argv[1], "r");
+    if (in_file == NULL) {
+        fprintf(stderr, "error opening files\n");
+        return EXIT_FAILURE;
+    }
+
     FILE* out_file1 = fopen(argv[2], "w");
+    if (out_file1 == NULL) {
+        fprintf(stderr, "error opening files\n");
+        fclose(in_file);
+        return EXIT_FAILURE;
+    }
+
     FILE* out_file2 = fopen(argv[3], "w");
+    if (out_file2 == NULL) {
+        fprintf(stderr, "error opening files\n");
+        fclose(in_file);
+        fclose(out_file1);
+        return EXIT_FAILURE;
+    }
+
     FILE* out_file3 = fopen(argv[4], "w");
+    if (out_file3 == NULL) {
+        fprintf(stderr, "error opening files\n");
+        fclose(in_file);
+        fclose(out_file1);
+        fclose(out_file2);
+        return EXIT_FAILURE;
+    }
 
     if (in_file == NULL || out_file1 == NULL || out_file2 == NULL || out_file3 == NULL) {
         fprintf(stderr, "error opening files\n");
