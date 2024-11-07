@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SIZE 1000
+#define SIZE 1000000
 
 typedef struct Point {
     int label;    
