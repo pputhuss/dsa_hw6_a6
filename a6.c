@@ -39,6 +39,15 @@ void free_array(Point** arr, int size) {
     }
 }
 
+void cleanup_memory(Point** arr, int arr_index) {
+    if (arr_index > 0 && arr[arr_index - 1] != NULL) {
+        free_tree(arr[arr_index - 1]); // Free the root and all its children
+    }
+    
+    // Free any remaining standalone nodes
+    free_array(arr, SIZE);
+}
+
 void print_pre(Point* node, FILE* outfile) {
     if (node == NULL) 
     {
@@ -415,10 +424,8 @@ int main(int argc, char* argv[])
     //pre-order traversal to out_file1
     // print_Tree_To_File(arr[arr_index - 1], out_file1);
 
-    for (int i = 0; i < SIZE; i++) 
-    {
-    arr[i] = NULL;
-    }
+    cleanup_memory(arr, arr_index);
+
     // // free_remaining_points(arr_index);
 
 
@@ -467,9 +474,8 @@ int main(int argc, char* argv[])
     find_VHdim(arr_index, arr);
     print_dim(arr[arr_index - 1], out_file2);
 
-    if (arr_index > 0) {
-        free_tree(arr[arr_index - 1]); // Free root node and its children
-    }
+    cleanup_memory(arr, arr_index);
+
 
     // free_remaining_points(arr_index);
 
@@ -512,5 +518,5 @@ int main(int argc, char* argv[])
     fclose(out_file2);
     fclose(out_file3);
 
-    return EXIT_SUCCESS;
+    return 0;
 }
