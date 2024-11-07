@@ -27,14 +27,17 @@ void free_tree(Point* root) {
     free(root);
 }
 
-// void free_remaining_points(int start_index) {
-//     for (int i = start_index; i < SIZE; i++) {
-//         if (arr[i] != NULL) {
-//             free(arr[i]);
-//             arr[i] = NULL;
-//         }
-//     }
-// }
+void free_array(Point** arr, int size) {
+    for (int i = 0; i < size; i++) {
+        if (arr[i] != NULL) {
+            // Don't free nodes that are part of the tree
+            if (arr[i]->left == NULL && arr[i]->right == NULL) {
+                free(arr[i]);
+            }
+            arr[i] = NULL;
+        }
+    }
+}
 
 void print_pre(Point* node, FILE* outfile) {
     if (node == NULL) 
@@ -84,6 +87,7 @@ void print_dim(Point* node, FILE* outfile) {
 
 Point** add_To_Array(Point* newPoint, int arr_ind, Point** arr) {
     if (arr_ind >= SIZE) {
+        free(newPoint);
         return NULL; //array bounds check
     }
     arr[arr_ind] = newPoint;
@@ -367,7 +371,7 @@ int main(int argc, char* argv[])
     int y_val = 0;
     // int iteration = 1; //start with part 1
     int arr_index = 0; //used for part 1
-    Point* arr[SIZE];
+    Point* arr[SIZE] = {NULL};
     Point* newPoint;
 
     //PART 1
@@ -411,8 +415,9 @@ int main(int argc, char* argv[])
     //pre-order traversal to out_file1
     // print_Tree_To_File(arr[arr_index - 1], out_file1);
 
-    if (arr_index > 0) {
-        free_tree(arr[arr_index - 1]); // Free root node and its children
+    for (int i = 0; i < SIZE; i++) 
+    {
+    arr[i] = NULL;
     }
     // // free_remaining_points(arr_index);
 
