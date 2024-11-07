@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <string.h>
 
-#define SIZE 1000
+#define SIZE 1000000
 
 typedef struct Point {
     int label;    
@@ -45,7 +45,7 @@ void add_To_Tree(Point* newPoint) {
         //arr defined in global var section
         arr[arr_index] = newPoint; 
 
-        if ((newPoint->label == 86 || newPoint->label == 72) && (arr_index >= 2)) {
+        if ((newPoint->x == -1) && (arr_index >= 2)) {
             newPoint->right = arr[arr_index - 1]; 
             newPoint->left = arr[arr_index - 2];
 
@@ -69,7 +69,7 @@ void add_To_Tree_P3(Point* newPoint) {
         //arr defined in global var section
         arr[arr_index3] = newPoint; 
 
-        if ((newPoint->label == 86 || newPoint->label == 72) && (arr_index3 >= 2)) {
+        if ((newPoint->x == -1) && (arr_index3 >= 2)) {
             newPoint->right = arr[arr_index3 - 1]; 
             newPoint->left = arr[arr_index3 - 2];
 
@@ -92,7 +92,7 @@ void find_VHdim(Point* newPoint) {
     {
         arr[arr_index2] = newPoint;
 
-        if ((newPoint->label == 86 || newPoint->label == 72) && (arr_index2 >= 2)) {
+        if ((newPoint->x == -1) && (arr_index2 >= 2)) {
             newPoint->right = arr[arr_index2 - 1]; 
             newPoint->left = arr[arr_index2 - 2];
 
@@ -178,7 +178,7 @@ void print_Tree_To_File(Point* root, FILE* outfile) {
         return;
     }
     
-    if (root->label == 86 || root->label == 72) {
+    if (root->x == -1) {
         fprintf(outfile, "%c\n", (char)root->label);
     }
     else {
