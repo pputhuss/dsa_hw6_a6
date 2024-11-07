@@ -18,14 +18,14 @@ typedef struct Point {
 // int arr_index2 = 0; //used for part 2
 // int arr_index3 = 0; //used for part 3
 
-// void free_tree(Point* root) {
-//     if (root == NULL) {
-//         return;
-//     }
-//     free_tree(root->left);
-//     free_tree(root->right);
-//     free(root);
-// }
+void free_tree(Point* root) {
+    if (root == NULL) {
+        return;
+    }
+    free_tree(root->left);
+    free_tree(root->right);
+    free(root);
+}
 
 // void free_remaining_points(int start_index) {
 //     for (int i = start_index; i < SIZE; i++) {
@@ -411,9 +411,9 @@ int main(int argc, char* argv[])
     //pre-order traversal to out_file1
     // print_Tree_To_File(arr[arr_index - 1], out_file1);
 
-    // if (arr_index > 0) {
-    //     free_tree(arr[arr_index - 1]);
-    // }
+    if (arr_index > 0) {
+        free_tree(arr[arr_index - 1]); // Free root node and its children
+    }
     // // free_remaining_points(arr_index);
 
 
@@ -462,10 +462,9 @@ int main(int argc, char* argv[])
     find_VHdim(arr_index, arr);
     print_dim(arr[arr_index - 1], out_file2);
 
-    // if (arr_index > 0) {
-    //     free_tree(arr[arr_index - 1]);
-    // }
-
+    if (arr_index > 0) {
+        free_tree(arr[arr_index - 1]); // Free root node and its children
+    }
 
     // free_remaining_points(arr_index);
 
